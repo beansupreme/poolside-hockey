@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_03_231815) do
+ActiveRecord::Schema.define(version: 2021_09_04_001029) do
+
+  create_table "player_exports", force: :cascade do |t|
+    t.string "export_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "players", force: :cascade do |t|
     t.string "first_name"

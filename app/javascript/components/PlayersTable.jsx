@@ -34,7 +34,7 @@ export function PlayersTable(props) {
   }
 
   return (
-    <div className="visa-table">
+    <div className="players-table">
       <div className="bg-white rounded overflow-scroll md:overflow-hidden border-t border-l border-r border-b border-gray-400 p-4">
         <table className="table-auto md:w-full">
           <caption className="text-xl">Hockey Players</caption>
