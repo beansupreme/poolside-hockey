@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   root 'home#index'
 
   resources :players, only: [:index]
-  resources :player_exports, only: [:index]
+  resources :player_exports, only: [:index, :create]
 end
