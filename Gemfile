@@ -58,3 +58,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'react-rails'
 gem 'faker'
 gem "tailwindcss-rails", "~> 0.4.3"
+gem 'aws-sdk-s3', '~> 1'

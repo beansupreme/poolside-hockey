@@ -7,7 +7,22 @@ class PlayerExportsController < ApplicationController
   end
 
   def create
-    @player_export = PlayerExport.create(export_url: 'https://example.com')
-    render json: @player_export
+    players = Player.all
+
+    file_data = Exports::PlayerExportGenerator.new(players).build
+    s3_url = CloudStorage::S3Manager.new.upload(file_data, filename)
+    @player_export = PlayerExport.new(export_url: s3_url)
+    
+    if @player_export.save
+      render json: @player_export
+    else
+      render status: :unprocessable_entity, json: { errors: @player_export.errors.full_messages.join(', ')}
+    end
+  end
+
+  private
+
+  def filename
+    "player_exports_#{Time.zone.now.strftime('%Y%m%dT%H%M%S')}.csv"
   end
 end
