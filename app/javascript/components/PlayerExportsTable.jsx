@@ -37,7 +37,7 @@ export function PlayerExportsTable() {
     <div className="players-export-table my-8">
       <div className="bg-white rounded overflow-scroll md:overflow-hidden border-t border-l border-r border-b border-gray-400 p-4 ">
         <table className="table-auto md:w-full">
-          <caption className="text-xl">Players Exports</caption>
+          <caption className="text-xl">Player Exports</caption>
           <thead>
             <tr>
               <th className="px-4 py-2">Time</th>
