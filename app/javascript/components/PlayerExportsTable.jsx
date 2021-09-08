@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
-
 import ActionCable from 'actioncable';
+import { useAlert } from 'react-alert';
  
 const cable = ActionCable.createConsumer('ws://localhost:3000/cable');
+
  
 export function PlayerExportsTable() {
-
+  const alert = useAlert();
   const [loading, setLoading] = useState(false);
   const [requestFailed, setRequestFailed] = useState(false);
   const [playerExports, setPlayerExports] = useState([]);
@@ -24,9 +25,15 @@ export function PlayerExportsTable() {
         console.log('Connected via useEffect hook');
       },
       received: function(subscriptionData) {
-        const newExport = subscriptionData.data;
-        console.log(newExport);
-        setPlayerExports(array => [...array, newExport]);
+        const subscriptionAction = subscriptionData.action;
+        if (subscriptionAction === 'export_complete') {
+          const newExport = subscriptionData.data;
+          setPlayerExports(array => [...array, newExport]);
+        }
+
+        if (subscriptionAction === 'error') {
+          alert.show('There was an error generating the report. Please try again in a few minutes.');
+        }
       }
     }, [cable.subscriptions]);
 
@@ -40,6 +47,7 @@ export function PlayerExportsTable() {
         })
         .catch(error => {
           console.log(error)
+          alert.show('There was an error fetching exports. Please try again later.')
           setRequestFailed(true);
         })
         .finally(() => setLoading(false))

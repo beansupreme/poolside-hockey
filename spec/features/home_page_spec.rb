@@ -43,4 +43,15 @@ describe 'visiting the home page', type: :feature, js: true do
     new_player_export = PlayerExport.order(:created_at).last
     expect(new_player_export.export_url).to not_be_nil
   end
+
+  it 'shows an error if something goes wrong' do
+    visit '/'
+
+    # Stub a low level component to throw an error
+    allow(CloudStorage::S3Manager).to receive(:new).and_raise(StandardError.new("S3 is not available right now"))
+  
+    click_on 'Create new export'
+
+    expect(page).to have_content("We're sorry, something went wrong")
+  end
 end
