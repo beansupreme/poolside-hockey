@@ -6,11 +6,12 @@ class PlayerExportJob < ApplicationJob
 
     file_data = Exports::PlayerExportGenerator.new(players).build
     s3_url = CloudStorage::S3Manager.new.upload(file_data, filename)
-    @player_export = PlayerExport.new(export_url: s3_url)
-    @player_export.save
+    @player_export = PlayerExport.create!(export_url: s3_url)
     
     broadcast_success_message
   rescue StandardError => error
+    # Notify the client when a job fails, otherwise they won't have any indication something went wrong
+    # Loging the error here will still allow our Error monitoring service (Sentry) to capture the exception
     broadcast_error_message(error.message)
     Rails.logger.error(error)
   end
