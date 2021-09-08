@@ -4,4 +4,6 @@ Rails.application.routes.draw do
 
   resources :players, only: [:index]
   resources :player_exports, only: [:index, :create]
+
+  mount ActionCable.server => '/cable'
 end

@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 
+import ActionCable from 'actioncable';
+ 
+const cable = ActionCable.createConsumer('ws://localhost:3000/cable');
+ 
 export function PlayerExportsTable() {
 
   const [loading, setLoading] = useState(false);
   const [requestFailed, setRequestFailed] = useState(false);
   const [playerExports, setPlayerExports] = useState([]);
+  // hard-code currentUserId until we have login system in place
+  const currentUserId = 1;
 
   useEffect(() => {
+
+    cable.subscriptions.create({
+      channel: 'ExportChannel',
+      user_id: currentUserId
+    },
+    {
+      connected: function() {
+        console.log('Connected via useEffect hook');
+      },
+      received: function(subscriptionData) {
+        const newExport = subscriptionData.data;
+        console.log(newExport);
+        setPlayerExports(array => [...array, newExport]);
+      }
+    }, [cable.subscriptions]);
+
     const fetchPlayerExports = () => {
       setLoading(true);
       axios
