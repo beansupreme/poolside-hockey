@@ -7,7 +7,7 @@ class PlayerExportsController < ApplicationController
   end
 
   def create
-    PlayerExportJob.perform_later
+    PlayerExportJob.perform_now
     render json: {}
   end
 end

@@ -12,7 +12,7 @@ class PlayerExportJob < ApplicationJob
     broadcast_success_message
   rescue StandardError => error
     broadcast_error_message(error.message)
-    raise error
+    Rails.logger.error(error)
   end
 
   private
@@ -31,7 +31,8 @@ class PlayerExportJob < ApplicationJob
   end
   
   def broadcast_success_message
-    ActionCable.server.broadcast("exports.#{current_user_id}", { action: "export_complete", data: player_export_data }) 
+    success_message = { action: "export_complete", data: player_export_data }
+    ActionCable.server.broadcast("exports.#{current_user_id}", success_message) 
   end
 
   def broadcast_error_message(error)
